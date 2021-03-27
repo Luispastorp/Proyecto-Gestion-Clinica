@@ -1,16 +1,7 @@
 package com.lp7.service;
 
-import java.util.List;
-
 import com.lp7.model.Paciente;
 
-public interface IPacienteService {
+public interface IPacienteService extends ICRUDService<Paciente, Integer>{
 	
-	List<Paciente> listar();
-	Paciente listarPorId(Integer id);
-	Paciente registrar(Paciente paciente);
-	Paciente modificar(Paciente paciente);
-	void eliminar(Integer id);
-	
-
 }

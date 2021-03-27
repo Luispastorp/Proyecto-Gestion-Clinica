@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "pacientes")
@@ -15,21 +18,30 @@ public class Paciente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@NotNull
+	@Size(min = 3, message = "Nombre minimo 3 caracteres")
 	@Column(nullable = false, length = 70)
 	private String nombres;
 	
+	@NotNull
+	@Size(min = 3, message = "Apellidos minimo 3 caracteres")
 	@Column(nullable = false, length = 70)
 	private String apellidos;
 	
+	@NotNull
+	@Size(min = 8, max = 8, message = "DNI debe tener 8 caracteres")
 	@Column(nullable = false, length = 8, unique = true)
 	private String dni;
 	
+	@Size(min = 3, message = "El DNI debe tener 8 caracteres")
 	@Column(nullable = false, length = 150)
 	private String direccion;
 	
+	@Size(min = 9, max = 9, message = "Telefono debe tener 8 caracteres")
 	@Column(length = 9)
 	private String telefono;
 	
+	@Email
 	@Column(length = 70)
 	private String email;
 
