@@ -1,7 +1,11 @@
 package com.lp7.controller;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lp7.dto.ConsultaListaExamenDTO;
+import com.lp7.dto.FiltroConsultaDTO;
 import com.lp7.exception.ModeloNotFoundException;
 import com.lp7.model.Consulta;
 import com.lp7.service.IConsultaService;
@@ -44,7 +49,7 @@ public class ConsultaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Consulta> registrar(@RequestBody ConsultaListaExamenDTO dto) throws Exception{
+	public ResponseEntity<Consulta> registrar(@Valid @RequestBody ConsultaListaExamenDTO dto) throws Exception{
 		Consulta registro = service.registrarTransaccional(dto);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(registro.getId()).toUri();
 		return ResponseEntity.created(location).build();
@@ -74,4 +79,26 @@ public class ConsultaController {
 		service.eliminar(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
+	
+	@GetMapping("/buscarporfecha/{fecha}")
+	public ResponseEntity<List<Consulta>> buscar(@PathVariable("fecha") String fecha){
+		List<Consulta> consultas = new ArrayList<>();
+		consultas = service.buscarFecha(LocalDateTime.parse(fecha));
+		if(consultas.isEmpty()) {
+			throw new ModeloNotFoundException("La fecha no existe");
+		}
+		return new ResponseEntity<List<Consulta>>(consultas, HttpStatus.OK);
+	}
+	
+	@PostMapping("buscar")
+	public ResponseEntity<List<Consulta>> buscarOtro(@RequestBody FiltroConsultaDTO filtro){
+		List<Consulta> consultas = new ArrayList<>();
+		consultas = service.buscar(filtro);
+		if(consultas.isEmpty()) {
+			throw new ModeloNotFoundException("El parametro no existe");
+		}
+		return new ResponseEntity<List<Consulta>>(consultas, HttpStatus.OK);
+	}
+	
+	
 }

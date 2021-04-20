@@ -1,5 +1,7 @@
 package com.lp7.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,5 +13,8 @@ public interface IConsultaExamenDao extends IGenericDao<ConsultaExamen, Integer>
 	@Modifying
 	@Query(value = "INSERT INTO consultas_examenes(consulta_id, examen_id) VALUES (:idConsulta, :idExamen)", nativeQuery = true)
 	Integer registrar(@Param("idConsulta") Integer idConsulta, @Param("idExamen") Integer idExamen);
+	
+	@Query("FROM ConsultaExamen ce WHERE ce.consulta.id = :idConsulta")
+	List<ConsultaExamen> listarExamenesPorConsulta(@Param("idConsulta") Integer idConsulta);
 
 }
